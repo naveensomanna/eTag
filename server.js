@@ -11,11 +11,17 @@ const server = http.createServer((req, res) => {
     if (err) {
       console.log("Error while reading file")
     } else {
+      // creating a hex value based on content
       const hash = crypto.createHash('sha256');
       hash.update(data)
       const etag = `${hash.digest('hex')}`;
 
+      // from browser if none match will come
       const clientTag = req.headers['if-none-match'];
+
+
+      // browser etag and generated etag is same not sending the data
+      // it will change when content of the file changes
 
       if (clientTag && clientTag === etag) {
         res.writeHead(304, 'Not Modified');
